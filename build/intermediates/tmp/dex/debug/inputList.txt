@@ -1,0 +1,2 @@
+/Users/mynameismaxz/Desktop/SpeechKit-Android-1.4.7/SampleVoiceApp/build/intermediates/classes/debug
+/Users/mynameismaxz/Desktop/SpeechKit-Android-1.4.7/SampleVoiceApp/build/intermediates/pre-dexed/debug/nmdp_speech_kit-829c1ac07ebe662ff72d6a2d8ac31cfdb2f10f17.jar
