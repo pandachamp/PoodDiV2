@@ -8,11 +8,16 @@ import com.nuance.nmdp.speechkit.SpeechKit;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -26,11 +31,296 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
+import java.util.Timer;
 
 public class DictationView extends ActionBarActivity
 {
+
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    Context context;
+    Timer timer;
+    int nbUpdates;
+    public static  final String Byakko = "Byakko_Tamingz";
+    private static final String TAG = "Caption Services";
+    private static final int MAX_PACKETS_STACK = 1;
+    private String longMsg;
+    private String latMsg;
+    private boolean initialized = false;
+    private SharedPreferences mPrefs;
+    //Default Parameters
+    private String server = "202.44.12.173";
+    private int port = 8000;
+    private String mountpoint = "kmutt.mp3";
+    private String password = "ser";
+    private int abitrate = 64;
+    private int achannels = 1;
+    private int arate = 8000;
+    private int mp3quality = 9; // from 1 to 9
+    private String name = "Caption Service";
+    private String description = "ENE KMUTT";
+    private String genre = "Caption_Service Media";
+    private String url = "http://ene.kmutt.ac.th";
+    private int x_streaming = 0;
+    private long x_starttime = 0;
+    private long x_curtime = 0;
+    //
+    private AudioRecord arec;
+    private short[] audioIn;
+    private int nread;
+    private int bSize;
+
+
+    public class printHandler {
+        public void print( String message )
+        {
+            Log.v(TAG, message);
+        }
+    };
+
+    private printHandler myPrintHandler = new printHandler();
+
+    public synchronized native void setPrintHook(printHandler handler);
+
+    public synchronized native static void initStreaming(String server, int port, String mountpoint, String password,
+                                                         int abitrate, int achannels, int arate, int mp3quality,
+                                                         String name, String decription, String genre, String url);
+
+    // init encoder
+    private synchronized native void initEncoder();
+
+    // init encoder
+    private synchronized native String testAlloc();
+
+    // shutdown encoder
+    private synchronized native void shutdownEncoder();
+
+    // connect to the server
+    private synchronized native int connectStreaming();
+
+    // write stream headers
+    private synchronized native void writeHeaders();
+
+    // write an audio block
+    private synchronized native int isStreaming();
+
+    // write an audio block
+    private synchronized native void writeAudioBlock(short[] audioIn, int size);
+
+    // disconnect from the server
+    private synchronized native void disconnectStreaming();
+
+    // release streaming structures
+    private synchronized native void releaseStreaming();
+
+    static {
+
+        try {
+            Log.v( TAG, "loading liblamenative.so");
+            System.loadLibrary("lamenative");
+        }
+        catch (UnsatisfiedLinkError e) {
+            Log.e( TAG, "Error: Could not load liblamenative.so : " + e.getMessage());
+        }
+
+        try {
+            Log.v( TAG, "loading liblameclientnative.so");
+            System.loadLibrary("lameclientnative");
+        }
+        catch (UnsatisfiedLinkError e) {
+            Log.e( TAG, "Error: Could not load liblameclientnative.so : " + e.getMessage());
+        }
+
+    }
+    //++++++++++++++++++++++++++++++++++++++++Method from Caption Service++++++++++++++++++++
+
+    public synchronized void initStreaming() {
+
+        // initialize streaming with all the parameters
+        initStreaming(server, port, mountpoint, password,
+                abitrate, achannels, arate, mp3quality,
+                name, description, genre, url);
+
+        //init encoder
+        initEncoder();
+    }
+    public synchronized void startStreaming() {
+        Log.d("Start Streaming","Start!!!!");
+        int ret;
+
+        // connect to the server
+        if ( ( ret = connectStreaming() ) == 0 ) writeHeaders();
+
+        // LinearLayout linlay = (LinearLayout) findViewById(R.id.LinearLayout1);
+        TextView tstatus=(TextView)findViewById(R.id.textStatus);
+        TextView ttime=(TextView)findViewById(R.id.textTime);
+        TextView tlisten=(TextView)findViewById(R.id.textList);
+        // Button stopButton = (Button) findViewById(R.id.stopb);
+
+        if ( ret != 0 )
+        {
+            tstatus.setText( "Connection error" );
+            ttime.setText( "00:00:00" );
+            tlisten.setText( "" );
+            //stopButton.setText( "Back" );
+            //linlay.setBackgroundColor( Color.RED );
+            return;
+        }
+        else
+        {
+            tstatus.setText( "Streaming" );
+            ttime.setText( "00:00:00" );
+            x_starttime = System.currentTimeMillis();
+            tlisten.setText( "http://"+server+":"+port+"/"+mountpoint );
+            //linlay.setBackgroundColor( Color.GREEN );
+        }
+
+        audioIn = new short[2*arate];
+
+        //bSize from getMinBufferSize returns 1024 Now use as 2048
+        bSize = 2048;
+        //bSize = AudioRecord.getMinBufferSize( arate, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT );
+        Log.v( TAG, "audio buffer size  : "+bSize );
+
+        arec = new AudioRecord(MediaRecorder.AudioSource.MIC, arate, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, 10*bSize );
+
+        arate = arec.getSampleRate();
+        Log.v( TAG, "sample rate : "+arate );
+
+        int state = arec.getState();
+        if ( state != AudioRecord.STATE_INITIALIZED )
+        {
+            Log.v( TAG, "problem initializing audio recorder : "+state );
+        }
+        else
+        {
+            Log.v( TAG, "audio recorder initialized : "+state );
+        }
+
+        // set the listener to get audio data
+        arec.setRecordPositionUpdateListener( new AudioRecord.OnRecordPositionUpdateListener()
+        {
+            public void onMarkerReached(AudioRecord recorder)
+            {
+                // set maximum priority
+                android.os.Process.setThreadPriority(-20);
+
+                // send audio block
+                if ( nread >= 0 )
+                {
+                    x_streaming = isStreaming();
+                    Log.v( TAG, "isStream  : "+x_streaming );
+                    if ( x_streaming == 1)
+                    {
+                        x_curtime = System.currentTimeMillis();
+                        int tsecs = (int)(x_curtime-x_starttime)/1000;
+                        int secs = tsecs%60;
+                        int mins = ((int)tsecs/60)%60;
+                        int hours = ((int)tsecs/3600);
+                        String tTime;
+                        if ( hours < 10 ) tTime = "0"+hours+":"; else tTime = hours+":";
+                        if ( mins < 10 ) tTime += "0"+mins+":"; else tTime += mins+":";
+                        if ( secs < 10 ) tTime += "0"+secs; else tTime += ""+secs;
+                        TextView ttime=(TextView)findViewById(R.id.textTime);
+                        ttime.setText( tTime );
+                        writeAudioBlock(audioIn, nread);
+                    }
+                    if ( arec.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING )
+                    {
+                        recorder.setNotificationMarkerPosition( bSize );
+                        // reading audio ahead, silly trick
+                        nread = recorder.read(audioIn, 0, arate );
+                    }
+                }
+                else
+                {
+                    Log.v( TAG, "error recording sound : "+nread );
+                }
+            }
+            public void onPeriodicNotification(AudioRecord recorder)
+            {
+                // send audio block
+                if ( nread >= 0 )
+                {
+                    x_streaming = isStreaming();
+                    if ( x_streaming == 1)
+                    {
+                        writeAudioBlock(audioIn, nread);
+                    }
+                    if ( arec.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING )
+                    {
+                        recorder.setPositionNotificationPeriod( bSize );
+                        // reading audio ahead, silly trick
+                        nread = recorder.read(audioIn, 0, arate );
+                        Log.v( TAG, "periodic "+nread+" samples" );
+                    }
+                }
+                else
+                {
+                    Log.v( TAG, "error recording sound : "+nread );
+                }
+            }
+        });
+
+        // set marker position
+        arec.setNotificationMarkerPosition( bSize );
+
+        arec.startRecording();
+        state = arec.getRecordingState();
+        //state = 3;
+        if ( state != AudioRecord.RECORDSTATE_RECORDING )
+        {
+            Log.v( TAG, "problem starting audio recorder : "+state );
+        }
+        else
+        {
+            Log.v( TAG, "audio recorder started : "+state );
+        }
+
+        // read first block to stream
+        nread = arec.read(audioIn, 0, arec.getNotificationMarkerPosition() );
+
+    }
+
+    /** stop streaming                            */
+    /** called when leaving the streaming screen  */
+    public synchronized void shutdownStreaming() {
+
+        TextView tstatus=(TextView)findViewById(R.id.textStatus);
+        TextView ttime=(TextView)findViewById(R.id.textTime);
+        TextView tlisten=(TextView)findViewById(R.id.textList);
+
+        tstatus.setText("Ready to Stream");
+        ttime.setText("");
+        tlisten.setText("");
+
+        // stop recording
+        int state = arec.getRecordingState();
+        if ( state == AudioRecord.RECORDSTATE_RECORDING )
+        {
+            arec.stop();
+            arec.release();
+        }
+
+        // shutdown encoder resoources
+        shutdownEncoder();
+
+        // release streaming ressources
+        releaseStreaming();
+    }
+
+    /** stop streaming                            */
+    /** called when capture is stoped             */
+    public synchronized void stopStreaming() {
+
+        // disconnect from the server
+        disconnectStreaming();
+
+    }
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private static SpeechKit _speechKit;
     static SpeechKit getSpeechKit() {
         return _speechKit;
@@ -91,6 +381,9 @@ public class DictationView extends ActionBarActivity
         }
         return null;
     }
+
+
+
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +402,54 @@ public class DictationView extends ActionBarActivity
         } catch (Exception ex) {
             // Ignore
         }
+
+        //+++++++++++++++++++++++++++++++++++++++++
+        TextView tstatus = (TextView)findViewById(R.id.textStatus);
+        tstatus.setText(R.string.statusr);
+        TextView ttime = (TextView)findViewById(R.id.textTime);
+        ttime.setText("");
+        TextView tlist = (TextView)findViewById(R.id.textList);
+        tlist.setText("");
+
+        context = this.getApplicationContext();
+
+        mPrefs = context.getSharedPreferences("gissmp3",0);
+        server = mPrefs.getString("giss_server", server);
+        port = mPrefs.getInt("giss_port", port);
+        mountpoint = mPrefs.getString("giss_mountpoint", mountpoint);
+        password = mPrefs.getString("giss_password", password);
+        abitrate = mPrefs.getInt("giss_abitrate", abitrate);
+        achannels = mPrefs.getInt("giss_achannels", achannels);
+        arate = mPrefs.getInt("giss_arate", arate);
+        mp3quality = mPrefs.getInt("giss_mp3quality", mp3quality);
+        name = mPrefs.getString("giss_name", name);
+        description = mPrefs.getString("giss_description", description);
+        genre = mPrefs.getString("giss_genre", genre);
+        url = mPrefs.getString("giss_url", url);
+
+        final Button butStart = (Button)findViewById(R.id.buttonCon);
+        if(butStart!=null){
+            butStart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(x_streaming==0){
+                        x_streaming=1;
+                        initStreaming();
+                        startStreaming();
+                        butStart.setText(R.string.disconnect);
+                    }
+                    else if(x_streaming==1){
+                        x_streaming=0;
+                        stopStreaming();
+                        shutdownStreaming();
+                        butStart.setText(R.string.connect);
+                    }
+                }
+            });
+
+        }
+        initialized = true;
+        //+++++++++++++++++++++++++++++++++++++++++
 
         _speechKit = (SpeechKit) getLastNonConfigurationInstance();
         if (_speechKit == null) {

@@ -1303,7 +1303,7 @@ containing a value of this type.
         public static final int icon=0x7f020033;
     }
     public static final class id {
-        public static final int action_about=0x7f090049;
+        public static final int action_about=0x7f09004c;
         public static final int action_bar=0x7f090031;
         public static final int action_bar_activity_content=0x7f090015;
         public static final int action_bar_container=0x7f090030;
@@ -1312,19 +1312,20 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f09001f;
         public static final int action_bar_title=0x7f09001e;
         public static final int action_context_bar=0x7f090032;
-        public static final int action_exit=0x7f09004a;
+        public static final int action_exit=0x7f09004d;
         public static final int action_menu_divider=0x7f090017;
         public static final int action_menu_presenter=0x7f090018;
         public static final int action_mode_bar=0x7f09002e;
         public static final int action_mode_bar_stub=0x7f09002d;
         public static final int action_mode_close_button=0x7f090020;
-        public static final int action_settings=0x7f090048;
+        public static final int action_settings=0x7f09004b;
         public static final int activity_chooser_view_content=0x7f090021;
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f09000a;
-        public static final int btn_listItem=0x7f090047;
-        public static final int btn_listeningStop=0x7f090046;
-        public static final int btn_startDictation=0x7f090042;
+        public static final int btn_listItem=0x7f09004a;
+        public static final int btn_listeningStop=0x7f090049;
+        public static final int btn_startDictation=0x7f090041;
+        public static final int buttonCon=0x7f09003f;
         public static final int checkbox=0x7f090029;
         public static final int collapseActionView=0x7f090011;
         public static final int decor_content_parent=0x7f09002f;
@@ -1341,7 +1342,6 @@ containing a value of this type.
         public static final int icon=0x7f090026;
         public static final int ifRoom=0x7f09000e;
         public static final int image=0x7f090023;
-        public static final int layout_bottomButtons=0x7f090041;
         public static final int listMode=0x7f090001;
         public static final int list_item=0x7f090025;
         public static final int middle=0x7f09000b;
@@ -1350,7 +1350,7 @@ containing a value of this type.
         public static final int normal=0x7f090000;
         public static final int progress_circular=0x7f09001a;
         public static final int progress_horizontal=0x7f09001b;
-        public static final int progress_listening=0x7f090044;
+        public static final int progress_listening=0x7f090047;
         public static final int radio=0x7f09002b;
         public static final int search_badge=0x7f090035;
         public static final int search_bar=0x7f090034;
@@ -1369,10 +1369,13 @@ containing a value of this type.
         public static final int split_action_bar=0x7f09001c;
         public static final int submit_area=0x7f09003c;
         public static final int tabMode=0x7f090002;
-        public static final int text_DictationResult=0x7f09003f;
-        public static final int text_listeningStatus=0x7f090043;
-        public static final int text_recordLevel=0x7f090045;
-        public static final int text_titleDictation=0x7f090040;
+        public static final int textList=0x7f090045;
+        public static final int textStatus=0x7f090043;
+        public static final int textTime=0x7f090044;
+        public static final int textTitle=0x7f090042;
+        public static final int text_DictationResult=0x7f090040;
+        public static final int text_listeningStatus=0x7f090046;
+        public static final int text_recordLevel=0x7f090048;
         public static final int title=0x7f090027;
         public static final int up=0x7f09001d;
         public static final int useLogo=0x7f090004;
@@ -1444,14 +1447,18 @@ containing a value of this type.
         public static final int button_stop=0x7f0c0017;
         public static final int button_tts=0x7f0c0018;
         public static final int button_websearch=0x7f0c0019;
-        public static final int hello=0x7f0c001a;
-        public static final int radio_endPointerLong=0x7f0c001b;
-        public static final int radio_endPointerNone=0x7f0c001c;
-        public static final int radio_endPointerShort=0x7f0c001d;
-        public static final int text_endPointer=0x7f0c001e;
-        public static final int title_dictation=0x7f0c001f;
-        public static final int title_main=0x7f0c0020;
-        public static final int title_tts=0x7f0c0021;
+        public static final int connect=0x7f0c001a;
+        public static final int disconnect=0x7f0c001b;
+        public static final int hello=0x7f0c001c;
+        public static final int radio_endPointerLong=0x7f0c001d;
+        public static final int radio_endPointerNone=0x7f0c001e;
+        public static final int radio_endPointerShort=0x7f0c001f;
+        public static final int statusr=0x7f0c0020;
+        public static final int statuss=0x7f0c0021;
+        public static final int text_endPointer=0x7f0c0022;
+        public static final int title_dictation=0x7f0c0023;
+        public static final int title_main=0x7f0c0024;
+        public static final int title_tts=0x7f0c0025;
     }
     public static final class style {
         /**  Customize your theme here. 
