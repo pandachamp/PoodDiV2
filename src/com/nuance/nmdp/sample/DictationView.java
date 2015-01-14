@@ -512,15 +512,72 @@ public class DictationView extends ActionBarActivity
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        _destroyed = true;
-        if (_currentRecognizer !=  null)
-        {
-            _currentRecognizer.cancel();
-            _currentRecognizer = null;
+
+    protected void onActivityResult(int requestCode,int resultCode,Intent outputIntent)
+    {
+        super.onActivityResult(requestCode, resultCode, outputIntent);
+        parseResult(this, requestCode, resultCode, outputIntent);
+
+    }
+
+    public void parseResult(DictationView activity, int requestCode , int resultCode , Intent outputIntent)
+    {
+        if (requestCode != 1){
+            return;
         }
+        if (resultCode != Activity.RESULT_OK){
+
+            return;
+        }
+        Bundle extrasB = outputIntent.getExtras();
+        if (extrasB != null) {
+            String ParaB = extrasB.getString(DictationView.Byakko);
+            UpdateMainText();
+            Toast ab = Toast.makeText(getApplicationContext(),"บันทึกการตั้งค่าแล้ว",Toast.LENGTH_LONG);
+            ab.show();
+        }
+    }
+    private void UpdateMainText(){
+        mPrefs = context.getSharedPreferences("gissmp3",0);
+        server = mPrefs.getString("giss_server", server);
+        port = mPrefs.getInt("giss_port", port);
+        mountpoint = mPrefs.getString("giss_mountpoint", mountpoint);
+        password = mPrefs.getString("giss_password", password);
+        abitrate = mPrefs.getInt("giss_abitrate", abitrate);
+        achannels = mPrefs.getInt("giss_achannels", achannels);
+        arate = mPrefs.getInt("giss_arate", arate);
+        mp3quality = mPrefs.getInt("giss_mp3quality", mp3quality);
+        name = mPrefs.getString("giss_name", name);
+        description = mPrefs.getString("giss_description", description);
+        genre = mPrefs.getString("giss_genre", genre);
+        url = mPrefs.getString("giss_url", url);
+
+    }
+    public void onDestroy() {
+
+        if ( arec != null )
+        {
+            int state = arec.getRecordingState();
+            if ( state == AudioRecord.RECORDSTATE_RECORDING )
+            {
+                arec.stop();
+                arec.release();
+            }
+        }
+        super.onDestroy();
+        Log.v( TAG, "Capion Service destroyed" );
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+
+    /** Called when the activity is resumed.     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v( TAG, "Caption Service resumed" );
     }
 
     private Recognizer.Listener createListener()
@@ -656,19 +713,39 @@ public class DictationView extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
+            OpenSetting();
             return true;
         }
         else if (id==R.id.action_about){
-
+            OpenAbout();
             return true;
         }
         else if (id==R.id.action_exit){
-
+            OpenExit();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void OpenExit() {
+        onDestroy();
+        finish();
+        System.exit(0);
+    }
+
+    private void OpenSetting(){
+        Bundle send = new Bundle();
+        send.putString(Byakko,"Send Infomation");
+        Intent myIntent = new Intent(getApplicationContext(),capsettings.class);
+        myIntent.putExtras(send);
+        startActivityForResult(myIntent,1);
+    }
+    private void OpenAbout(){
+        Bundle send = new Bundle();
+        send.putString(Byakko,"Send Infomation");
+        Intent myIntent = new Intent(getApplicationContext(),capabout.class);
+        myIntent.putExtras(send);
+        startActivityForResult(myIntent,1);
     }
 
 

@@ -1303,7 +1303,7 @@ containing a value of this type.
         public static final int icon=0x7f020033;
     }
     public static final class id {
-        public static final int action_about=0x7f09004c;
+        public static final int action_about=0x7f090059;
         public static final int action_bar=0x7f090031;
         public static final int action_bar_activity_content=0x7f090015;
         public static final int action_bar_container=0x7f090030;
@@ -1312,20 +1312,22 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f09001f;
         public static final int action_bar_title=0x7f09001e;
         public static final int action_context_bar=0x7f090032;
-        public static final int action_exit=0x7f09004d;
+        public static final int action_exit=0x7f09005a;
         public static final int action_menu_divider=0x7f090017;
         public static final int action_menu_presenter=0x7f090018;
         public static final int action_mode_bar=0x7f09002e;
         public static final int action_mode_bar_stub=0x7f09002d;
         public static final int action_mode_close_button=0x7f090020;
-        public static final int action_settings=0x7f09004b;
+        public static final int action_settings=0x7f090058;
         public static final int activity_chooser_view_content=0x7f090021;
         public static final int always=0x7f09000f;
+        public static final int apply=0x7f090056;
         public static final int beginning=0x7f09000a;
         public static final int btn_listItem=0x7f09004a;
         public static final int btn_listeningStop=0x7f090049;
         public static final int btn_startDictation=0x7f090041;
         public static final int buttonCon=0x7f09003f;
+        public static final int cancel=0x7f090057;
         public static final int checkbox=0x7f090029;
         public static final int collapseActionView=0x7f090011;
         public static final int decor_content_parent=0x7f09002f;
@@ -1333,6 +1335,11 @@ containing a value of this type.
         public static final int dialog=0x7f090012;
         public static final int disableHome=0x7f090009;
         public static final int dropdown=0x7f090013;
+        public static final int editMP=0x7f090051;
+        public static final int editPassword=0x7f090055;
+        public static final int editPort=0x7f09004f;
+        public static final int editServer=0x7f09004d;
+        public static final int editUser=0x7f090053;
         public static final int edit_query=0x7f090033;
         public static final int end=0x7f09000c;
         public static final int expand_activities_button=0x7f090022;
@@ -1342,6 +1349,7 @@ containing a value of this type.
         public static final int icon=0x7f090026;
         public static final int ifRoom=0x7f09000e;
         public static final int image=0x7f090023;
+        public static final int li=0x7f09004b;
         public static final int listMode=0x7f090001;
         public static final int list_item=0x7f090025;
         public static final int middle=0x7f09000b;
@@ -1370,9 +1378,14 @@ containing a value of this type.
         public static final int submit_area=0x7f09003c;
         public static final int tabMode=0x7f090002;
         public static final int textList=0x7f090045;
+        public static final int textMP=0x7f090050;
+        public static final int textPassword=0x7f090054;
+        public static final int textServer=0x7f09004c;
         public static final int textStatus=0x7f090043;
         public static final int textTime=0x7f090044;
         public static final int textTitle=0x7f090042;
+        public static final int textUser=0x7f090052;
+        public static final int textView=0x7f09004e;
         public static final int text_DictationResult=0x7f090040;
         public static final int text_listeningStatus=0x7f090046;
         public static final int text_recordLevel=0x7f090048;
@@ -1412,7 +1425,8 @@ containing a value of this type.
         public static final int dictation=0x7f030017;
         public static final int listening=0x7f030018;
         public static final int listitem=0x7f030019;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001a;
+        public static final int settings=0x7f03001a;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001b;
     }
     public static final class menu {
         public static final int main=0x7f0e0000;
