@@ -30,8 +30,11 @@
 
             </intent-filter>
         </activity>
-
+        <activity android:name=".capabout"
+            android:parentActivityName="com.nuance.nmdp.sample.capabout"
+            android:theme="@style/AppTheme"></activity>
     </application>
+
 
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 <uses-permission android:name="android.permission.INTERNET"></uses-permission>

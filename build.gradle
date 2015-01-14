@@ -12,6 +12,7 @@ dependencies {
     compile files('libs/nmdp_speech_kit.jar')
     compile files('libs/armeabi.jar')
     compile 'com.android.support:appcompat-v7:21.0.2'
+    compile files('libs/lib.jar')
 }
 
 android {
