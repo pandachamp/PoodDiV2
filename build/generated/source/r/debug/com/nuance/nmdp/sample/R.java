@@ -1303,6 +1303,7 @@ containing a value of this type.
         public static final int icon=0x7f020033;
     }
     public static final class id {
+        public static final int action_about=0x7f090049;
         public static final int action_bar=0x7f090031;
         public static final int action_bar_activity_content=0x7f090015;
         public static final int action_bar_container=0x7f090030;
@@ -1311,11 +1312,13 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f09001f;
         public static final int action_bar_title=0x7f09001e;
         public static final int action_context_bar=0x7f090032;
+        public static final int action_exit=0x7f09004a;
         public static final int action_menu_divider=0x7f090017;
         public static final int action_menu_presenter=0x7f090018;
         public static final int action_mode_bar=0x7f09002e;
         public static final int action_mode_bar_stub=0x7f09002d;
         public static final int action_mode_close_button=0x7f090020;
+        public static final int action_settings=0x7f090048;
         public static final int activity_chooser_view_content=0x7f090021;
         public static final int always=0x7f09000f;
         public static final int beginning=0x7f09000a;
@@ -1408,6 +1411,9 @@ containing a value of this type.
         public static final int listitem=0x7f030019;
         public static final int support_simple_spinner_dropdown_item=0x7f03001a;
     }
+    public static final class menu {
+        public static final int main=0x7f0e0000;
+    }
     public static final class raw {
         public static final int beep=0x7f050000;
     }
@@ -1428,21 +1434,24 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with=0x7f0c000d;
         public static final int abc_shareactionprovider_share_with_application=0x7f0c000e;
         public static final int abc_toolbar_collapse_description=0x7f0c000f;
-        public static final int app_name=0x7f0c0010;
-        public static final int button_dictation=0x7f0c0011;
-        public static final int button_startDictation=0x7f0c0012;
-        public static final int button_startTts=0x7f0c0013;
-        public static final int button_stop=0x7f0c0014;
-        public static final int button_tts=0x7f0c0015;
-        public static final int button_websearch=0x7f0c0016;
-        public static final int hello=0x7f0c0017;
-        public static final int radio_endPointerLong=0x7f0c0018;
-        public static final int radio_endPointerNone=0x7f0c0019;
-        public static final int radio_endPointerShort=0x7f0c001a;
-        public static final int text_endPointer=0x7f0c001b;
-        public static final int title_dictation=0x7f0c001c;
-        public static final int title_main=0x7f0c001d;
-        public static final int title_tts=0x7f0c001e;
+        public static final int action_about=0x7f0c0010;
+        public static final int action_exit=0x7f0c0011;
+        public static final int action_settings=0x7f0c0012;
+        public static final int app_name=0x7f0c0013;
+        public static final int button_dictation=0x7f0c0014;
+        public static final int button_startDictation=0x7f0c0015;
+        public static final int button_startTts=0x7f0c0016;
+        public static final int button_stop=0x7f0c0017;
+        public static final int button_tts=0x7f0c0018;
+        public static final int button_websearch=0x7f0c0019;
+        public static final int hello=0x7f0c001a;
+        public static final int radio_endPointerLong=0x7f0c001b;
+        public static final int radio_endPointerNone=0x7f0c001c;
+        public static final int radio_endPointerShort=0x7f0c001d;
+        public static final int text_endPointer=0x7f0c001e;
+        public static final int title_dictation=0x7f0c001f;
+        public static final int title_main=0x7f0c0020;
+        public static final int title_tts=0x7f0c0021;
     }
     public static final class style {
         /**  Customize your theme here. 
